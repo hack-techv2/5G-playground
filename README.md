@@ -15,21 +15,12 @@ git clone https://github.com/hack-techv2/5G-playground.git
 1. Give yourself execution rights to the installation scripts
 
 ```
-chmod +x ./5G-playground/scripts/k8s-install.sh
-chmod +x ./5G-playground/scripts/k8s-setup.sh
-chmod +x ./5G-playground/scripts/ctfd-install.sh
-chmod +x ./5G-playground/scripts/ctfd-setup.sh
+chmod +x ./5G-playground/scripts/k8s-install.sh ./5G-playground/scripts/k8s-setup.sh ./5G-playground/scripts/ctfd-install.sh ./5G-playground/scripts/ctfd-setup.sh
 ```
 
 2. Run the four installation scripts from the /scripts folder.
 ```
-./k8s-install.sh
-./k8s-setup.sh
-./ctfd-install.sh
-
-!Wait until the ctfd-install has finished installing before running the ctfd-setup script!
-
-./ctfd-setup.sh
+cd ./5G-playground/scripts && ./k8s-install.sh; ./k8s-setup.sh; ./ctfd-install.sh; ./ctfd-setup.sh
 ```
 <blockquote id="bkmrk-note%3A-the-ctfd-insta">
 <p id="bkmrk-note%3A-the-ctfd-scrip">NOTE: The ctfd-install script does NOT terminate. Read the output in the terminal to determine when the containers are up.&nbsp;</p>

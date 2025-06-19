@@ -5,48 +5,59 @@ microk8s enable host-access
 microk8s enable hostpath-storage
 microk8s enable dns
 microk8s enable ingress
-microk8s enable metallb:192.168.137.240-192.168.137.250 ### change this based on IP address of VM
 
-
+# Set up MetalLB for dynamic IP range
 # Get the first IP of the host (assuming it is on the desired interface)
 HOST_IP=$(hostname -I | awk '{print $1}')
-# Calculate the subnet of the HOST_IP (e.g., 192.168.137.0)
-SUBNET=$(echo "$HOST_IP" | awk -F. '{print $1"."$2"."$3".0"}')
-### ENSURE THAT HOST IP DOES NOT FALL INTO THIS RANGE
-# Define the start and end of the IP range within the same subnet
-START_IP=$(echo "$HOST_IP" | awk -F. '{print $1"."$2"."$3".220"}')
-END_IP=$(echo "$HOST_IP" | awk -F. '{print $1"."$2"."$3".222"}')
-# Generate the addresspool.yaml dynamically with the correct IP range
-cat <<EOF > ../helms/addresspool.yaml
-apiVersion: metallb.io/v1beta1
-kind: IPAddressPool
-metadata:
-  name: custom-addresspool
-  namespace: metallb-system
-spec: 
-  addresses:
-  - ${START_IP}-${END_IP}
-EOF
+# Calculate the subnet and create MetalLB IP range (keeping last octet as 240-250)
+METALLB_START=$(echo "$HOST_IP" | awk -F. '{print $1"."$2"."$3".240"}')
+METALLB_END=$(echo "$HOST_IP" | awk -F. '{print $1"."$2"."$3".250"}')
 
-# Apply the addresspool.yaml to Kubernetes
-microk8s kubectl apply -f ../helms/addresspool.yaml
+# Enable MetalLB with dynamic IP range
+microk8s enable metallb:${METALLB_START}-${METALLB_END}
 
 # using helm charts to set up environment (open5gs and UERANSIM)
 microk8s kubectl create namespace your-namespace
 microk8s kubectl config set-context --current --namespace=your-namespace
-microk8s helm install my-open5gs ../open5gs-2.2.3/open5gs --namespace your-namespace --values ../helms/5gSA-values.yaml
-echo "################################################"
-echo "Sleeping for 360s for open5gs to set up properly"
-echo "################################################"
-sleep 360s
-microk8s helm install my-ueransim-gnb ../ueransim-gnb-0.2.6/ueransim-gnb --namespace your-namespace --values ../helms/my-gnb-ues-values.yaml
+
+# Check if my-open5gs helm release already exists
+if microk8s helm list -n your-namespace | grep -q "my-open5gs"; then
+    echo "################################################"
+    echo "my-open5gs already exists, skipping installation and sleep"
+    echo "################################################"
+else
+    microk8s helm install my-open5gs ../open5gs-2.2.3/open5gs --namespace your-namespace --values ../helms/5gSA-values.yaml
+    echo "################################################"
+    echo "Sleeping for 360s for open5gs to set up properly"
+    echo "################################################"
+    sleep 360s
+fi
+
+# Check if my-ueransim-gnb helm release already exists
+if microk8s helm list -n your-namespace | grep -q "my-ueransim-gnb"; then
+    echo "my-ueransim-gnb already exists, skipping installation"
+else
+    microk8s helm install my-ueransim-gnb ../ueransim-gnb-0.2.6/ueransim-gnb --namespace your-namespace --values ../helms/my-gnb-ues-values.yaml
+fi
 
 # setting up of vulnerable web server
 # requires building of docker image because github maximum file size is 100MB
-sudo snap install docker
-sudo docker build ../php1 -t my-php-app:1.0.0
-sudo docker save my-php-app:1.0.0 > ../php1/my-php-app.tar
-microk8s ctr image import ../php1/my-php-app.tar
+
+# Check if Docker is already installed
+if ! command -v docker &> /dev/null; then
+    echo "Installing Docker..."
+    sudo snap install docker
+else
+    echo "Docker is already installed"
+fi
+
+# Build Docker image with correct syntax
+echo "Building Docker image..."
+sudo docker build -t my-php-app:1.0.0 ../php1
+
+# Import directly to microk8s without temporary file
+echo "Importing image directly to microk8s..."
+sudo docker save my-php-app:1.0.0 | microk8s ctr image import -
 
 
 
@@ -75,7 +86,13 @@ ingress:
 EOF
 
 # actually installing the helm chart for web server
-microk8s helm install phpfpm-nginx-release ../phpfpm-nginx-chart --namespace your-namespace
+# Check if phpfpm-nginx-release helm release already exists
+if microk8s helm list -n your-namespace | grep -q "phpfpm-nginx-release"; then
+    echo "phpfpm-nginx-release already exists, upgrading instead"
+    microk8s helm upgrade phpfpm-nginx-release ../phpfpm-nginx-chart --namespace your-namespace
+else
+    microk8s helm install phpfpm-nginx-release ../phpfpm-nginx-chart --namespace your-namespace
+fi
 
 
 ### if there are errors, upgrading the deployment may work sometimes

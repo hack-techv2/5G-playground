@@ -11,5 +11,5 @@ head -c 64 /dev/urandom > ../CTFd/.ctfd_secret_key
 # Change directory to the CTFd folder in the current working directory
 cd ../CTFd
 # Start CTFd using Docker Compose
-sudo docker-compose up
+sudo docker-compose up -d
 
