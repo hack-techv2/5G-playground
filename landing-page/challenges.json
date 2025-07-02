@@ -1,0 +1,299 @@
+{
+    "platform": {
+        "name": "5G Playground",
+        "version": "1.0.0",
+        "total_challenges": 12,
+        "total_points": 115,
+        "categories": ["Introduction", "Wireshark", "Web", "5G API"]
+    },
+    "challenges": [
+        {
+            "id": 1,
+            "title": "Introduction to Challenges",
+            "category": "Introduction",
+            "difficulty": "beginner",
+            "points": 5,
+            "description": "The (highly) recommended order to complete the challenges is **Wireshark -> Web -> 5G API**. The flag for this challenge is open5gs{welcome_to_5g_playground}.",
+            "icon": "fas fa-flag",
+            "prerequisites": [],
+            "connection_info": null,
+            "hints": [],
+            "flags": [
+                {
+                    "type": "static",
+                    "value": "open5gs{welcome_to_5g_playground}",
+                    "case_sensitive": true
+                }
+            ],
+            "files": []
+        },
+        {
+            "id": 11,
+            "title": "UE Connection",
+            "category": "Wireshark",
+            "difficulty": "easy",
+            "points": 10,
+            "description": "Find the supi of the UE that connected to the network in the pcap file. Flag format is open5gs{<SUPI_VALUE>}",
+            "icon": "fas fa-file-archive",
+            "prerequisites": [],
+            "connection_info": "Wireshark pcap analysis required",
+            "hints": [],
+            "flags": [
+                {
+                    "type": "static",
+                    "value": "open5gs{999705678123492}",
+                    "case_sensitive": false
+                }
+            ],
+            "files": [
+                {
+                    "name": "ue-connection.pcapng",
+                    "type": "pcap",
+                    "description": "Network capture file showing UE connection",
+                    "path": "/challenge-files/ue-connection.pcapng",
+                    "download_url": "/challenge-files/ue-connection.pcapng"
+                }
+            ]
+        },
+        {
+            "id": 12,
+            "title": "AMF 1",
+            "category": "Wireshark",
+            "difficulty": "medium",
+            "points": 10,
+            "description": "An attacker has carried out a DoS attack on a UE since the AMF port is exposed. Find the corresponding packet.",
+            "icon": "fas fa-bug",
+            "prerequisites": [],
+            "connection_info": "Wireshark pcap analysis required",
+            "hints": [],
+            "flags": [
+                {
+                    "type": "static",
+                    "value": "open5gs{UE_DOS_s9873f7sd}",
+                    "case_sensitive": false
+                }
+            ],
+            "files": [
+                {
+                    "name": "ue-amf.pcapng",
+                    "type": "pcap",
+                    "description": "Network capture file showing AMF DoS attack",
+                    "path": "/challenge-files/ue-amf.pcapng",
+                    "download_url": "/challenge-files/ue-amf.pcapng"
+                }
+            ]
+        },
+        {
+            "id": 3,
+            "title": "Web 1",
+            "category": "Web",
+            "difficulty": "easy",
+            "points": 10,
+            "description": "Get the subscriber key of the user with IMSI number 999700000000002",
+            "icon": "fas fa-globe",
+            "prerequisites": [],
+            "connection_info": "Access the Open5GS WebUI portal",
+            "hints": [
+                {
+                    "content": "Need to access the open5gs WebUI.",
+                    "unlock_requirements": []
+                }
+            ],
+            "flags": [
+                {
+                    "type": "static",
+                    "value": "open5gs{465B5CE8B199B49FAA5F0A2EE238A6BC}",
+                    "case_sensitive": true
+                }
+            ],
+            "files": []
+        },
+        {
+            "id": 4,
+            "title": "Web 2",
+            "category": "Web",
+            "difficulty": "medium",
+            "points": 10,
+            "description": "There is a web portal only accessible to mobile subscribers. Get the flag from the /hello.php page.",
+            "icon": "fas fa-mobile-alt",
+            "prerequisites": [3],
+            "connection_info": "Mobile subscriber portal access required",
+            "hints": [
+                {
+                    "content": "Connect to the mobile network by configuring the UERANSIM simulator.",
+                    "unlock_requirements": []
+                },
+                {
+                    "content": "Refer to pcap file in UE Connection challenge",
+                    "unlock_requirements": []
+                },
+                {
+                    "content": "IP address of GNB depends on your setup. Last octet of the IP address is from the range 220-222. Use command \"hostname -I | awk {'print $1'}\" to determine your IP address. (E.g. 192.168.40.220)",
+                    "unlock_requirements": []
+                },
+                {
+                    "content": "Refer to pcap file in AMF 1 challenge",
+                    "unlock_requirements": []
+                }
+            ],
+            "flags": [
+                {
+                    "type": "static",
+                    "value": "open5gs{4ui4ukd5icummo75rr6r96l1e}",
+                    "case_sensitive": true
+                }
+            ],
+            "files": []
+        },
+        {
+            "id": 7,
+            "title": "Web 3",
+            "category": "Web",
+            "difficulty": "hard",
+            "points": 10,
+            "description": "Get access to the web portal pod and find the flag from a php page in /var/www/html.",
+            "icon": "fas fa-terminal",
+            "prerequisites": [3, 4],
+            "connection_info": "Web portal pod access required",
+            "hints": [
+                {
+                    "content": "Also refer to the pcap file in AMF 1.",
+                    "unlock_requirements": []
+                }
+            ],
+            "flags": [
+                {
+                    "type": "static",
+                    "value": "open5gs{r3ak3mw7jvk67r4eyn0hjhpvh}",
+                    "case_sensitive": true
+                }
+            ],
+            "files": []
+        },
+        {
+            "id": 14,
+            "title": "About 5G API Challenges",
+            "category": "5G API",
+            "difficulty": "beginner",
+            "points": 5,
+            "description": "The 5G API challenges requires you to query endpoints of network functions that are exposed through NodePorts. (Highly recommended to complete Web Challenges first). Correct API queries will receive an output by Open5GS, and parts of the reply will form the flag. For example, the output is *b'{\"nfInstances\":[]}'*. The challenge states that the expected output is *b'{\"XXInstances\":[]}'* and the flag is open5gs{XX}. The correct flag would be open5gs{nf}",
+            "icon": "fas fa-info-circle",
+            "prerequisites": [],
+            "connection_info": null,
+            "hints": [],
+            "flags": [
+                {
+                    "type": "static",
+                    "value": "open5gs{nf}",
+                    "case_sensitive": true
+                }
+            ],
+            "files": []
+        },
+        {
+            "id": 5,
+            "title": "UDM 1",
+            "category": "5G API",
+            "difficulty": "medium",
+            "points": 10,
+            "description": "UDM has a API endpoint in the format of {\"subscribedUeAmbr\":{\"uplink\":\"XXXXXXX Kbps\",\"downlink\":\" XXXXXXX Kbps\"},\"nssai\":{\"defaultYYYYYYNssais\":[{\"sst\":1,\"sd\":\"ZZZZZZ\"}]}}. The flag is in the format open5gs{XXXXXXX-YYYYYY-ZZZZZZ}.",
+            "icon": "fas fa-database",
+            "prerequisites": [],
+            "connection_info": "UDM API endpoint access",
+            "hints": [
+                {
+                    "content": "Port 32010",
+                    "unlock_requirements": []
+                }
+            ],
+            "flags": [
+                {
+                    "type": "static",
+                    "value": "open5gs{1000000-Single-111111}",
+                    "case_sensitive": false
+                }
+            ],
+            "files": []
+        },
+        {
+            "id": 6,
+            "title": "AUSF 1",
+            "category": "5G API",
+            "difficulty": "medium",
+            "points": 10,
+            "description": "AUSF has an API endpoint in the format of <code>{\"authType\":\"5GAKA\",\"5gAuthData\":{\"XXXX\":\"beec69bf428fcb06465ae5c0e162800f\",\"YYYYYYYYY\":\"9867ce4eff20a2e5147b45da103c02f4\",\"autn\":\"5385c0fe2c53800062510699f358940f\"},\"_links\":{\"5g-aka\":{\"href\":\"hxxp://10.1.198.156:ZZZZ/nausf-auth/v1/ue-authentications/3/5g-aka-confirmation\"}}}</code>. The flag is in the format of open5gs{XXXX-YYYYYYYYY-ZZZZ}.",
+            "icon": "fas fa-shield-alt",
+            "prerequisites": [],
+            "connection_info": "AUSF authentication endpoint",
+            "hints": [],
+            "flags": [
+                {
+                    "type": "static",
+                    "value": "open5gs{randhxresStar7777}",
+                    "case_sensitive": false
+                }
+            ],
+            "files": []
+        },
+        {
+            "id": 8,
+            "title": "NRF 1",
+            "category": "5G API",
+            "difficulty": "medium",
+            "points": 10,
+            "description": "One of the NRF endpoints allows us to retrieve a collection of all running NF instances. An example output would be {\"_links\":{\"items\":[{\"href\":\"hxxp://10.1.198.157:7777/XXXX-XXX/YY/ZZ-ZZZZZZZZZ/89b2c106-7013-41ef-9a04-15c3e6eb4652\"}],\"self\":{\"href\":\"hxxp://10.1.198.157:7777/XXXX-XXX/YY/ZZ-ZZZZZZZZZ\"}}}. Find out what \"XXXX-XXX/YY/ZZ-ZZZZZZZZZ\" is. The flag is in the format of open5gs{XXXX-XXX-YY-ZZ-ZZZZZZZZZ}",
+            "icon": "fas fa-network-wired",
+            "prerequisites": [],
+            "connection_info": "NRF endpoint discovery",
+            "hints": [],
+            "flags": [
+                {
+                    "type": "static",
+                    "value": "open5gs{nnrf-nfm-v1-nf-instances}",
+                    "case_sensitive": false
+                }
+            ],
+            "files": []
+        },
+        {
+            "id": 9,
+            "title": "NRF 2",
+            "category": "5G API",
+            "difficulty": "medium",
+            "points": 10,
+            "description": "The NF Discovery Service is used by all other Network Functions to find and locate Services that they need in order to operate. Get information about the SMF. An example output is {\"validityPeriod\":XXXX,\"nfInstances\":[{\"nfInstanceId\":\"85b6f694-7013-41ef-ad92-a9275b2ec687\",\"nfType\":\"SMF\",\"nfStatus\":\"REGISTERED\",\"heartBeatTimer\":YY,\"plmnList\":[{\"mcc\":\"999\",\"mnc\":\"70\"}],\"ipv4Addresses\":[\"10.1.198.188\"],\"allowedNfTypes\":[\"SCP\",\"AMF\"],\"priority\":0,\"capacity\":100,\"load\":0,\"nfServices\":[{\"serviceInstanceId\":\"8604c98c-7013-41ef-ad92-a9275b2ec687\",\"serviceName\":\"nsmf-pdusession\",\"versions\":[{\"apiVersionInUri\":\"v1\",\"apiFullVersion\":\"1.0.0\"}],\"scheme\":\"http\",\"nfServiceStatus\":\"REGISTERED\",\"ipEndPoints\":[{\"ipv4Address\":\"10.1.198.188\",\"port\":7777}],\"allowedNfTypes\":[\"AMF\"],\"priority\":0,\"capacity\":ZZZ,\"load\":0}],\"nfProfileChangesSupportInd\":true}]}. The flag is in the format of open5gs{XXXX-YY-ZZZ}.",
+            "icon": "fas fa-search",
+            "prerequisites": [],
+            "connection_info": "NF Discovery Service access",
+            "hints": [],
+            "flags": [
+                {
+                    "type": "static",
+                    "value": "open5gs{3600-10-100}",
+                    "case_sensitive": false
+                }
+            ],
+            "files": []
+        },
+        {
+            "id": 10,
+            "title": "UDR 1",
+            "category": "5G API",
+            "difficulty": "medium",
+            "points": 10,
+            "description": "Get subscription data for imsi-999700000000001 from the UDR. An example output is {\"authenticationMethod\":\"5G_AKA\",\"XXXXXXXXXXXXXX\":\"465b5ce8b199b49faa5f0a2ee238a6bc\",\"sequenceNumber\":{\"sqn\":\"000000000081\"},\"authenticationManagementField\":\"8000\",\"encOpcKey\":\"YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY\"}. Flag format is open5gs{XXXXXXXXXXXXXX-YYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY}",
+            "icon": "fas fa-database",
+            "prerequisites": [],
+            "connection_info": "UDR subscription data access",
+            "hints": [],
+            "flags": [
+                {
+                    "type": "static",
+                    "value": "open5gs{encPermanentKey-e8ed289deba952e4283b54e88e6183ca}",
+                    "case_sensitive": false
+                }
+            ],
+            "files": []
+        }
+    ]
+}

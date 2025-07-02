@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>5G Playground</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <h1>5G Playground</h1>
+            </div>
+            <div class="tagline">
+                <h2>by CSA Attack Simulation Group (ASG)</h2>
+            </div>
+        </header>
+
+        <section class="hero">
+            <div class="hero-content">
+                <h2>Welcome to the 5G Security Challenge Platform</h2>
+                <p>Test your skills with our range of 5G network security challenges. Each challenge simulates real-world vulnerabilities and attack vectors in 5G networks. Solve challenges to earn points and advance your knowledge.</p>
+                <a href="#challenges" class="btn">Explore Challenges</a>
+            </div>
+        </section>
+
+        <!-- Platform Statistics -->
+        <section class="platform-stats">
+            <div class="stats-container">
+                <div class="stat-item">
+                    <div class="stat-number" id="total-challenges">-</div>
+                    <div class="stat-label">Total Challenges</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="total-points">-</div>
+                    <div class="stat-label">Total Points</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number" id="categories-count">-</div>
+                    <div class="stat-label">Categories</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Category Filter -->
+        <section class="category-filter">
+            <h3>Filter by Category</h3>
+            <div class="filter-buttons" id="category-filters">
+                <button class="filter-btn active" data-category="all">All</button>
+                <!-- Dynamic category buttons will be inserted here -->
+            </div>
+        </section>
+
+        <section id="challenges" class="challenges">
+            <h2>Available Challenges</h2>
+            <div class="challenge-grid" id="challenge-grid">
+                <!-- Challenges will be dynamically loaded here -->
+                <div class="loading-spinner">
+                    <i class="fas fa-spinner fa-spin"></i>
+                    <p>Loading challenges...</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Challenge Detail Modal -->
+        <div id="challenge-modal" class="modal">
+            <div class="modal-content challenge-modal-content">
+                <span class="close" onclick="closeModal('challenge-modal')">&times;</span>
+                <div class="challenge-header">
+                    <div class="challenge-icon-large">
+                        <i id="modal-icon" class="fas fa-flag"></i>
+                    </div>
+                    <div class="challenge-info">
+                        <h2 id="modal-title">Challenge Title</h2>
+                        <div class="challenge-meta">
+                            <span class="badge category-badge" id="modal-category">Category</span>
+                            <span class="badge difficulty-badge" id="modal-difficulty">Difficulty</span>
+                            <span class="badge points-badge" id="modal-points">Points</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="challenge-body">
+                    <div class="challenge-description">
+                        <h3>Description</h3>
+                        <div id="modal-description">Challenge description will appear here.</div>
+                    </div>
+
+                    <div class="challenge-connection" id="modal-connection-section" style="display: none;">
+                        <h3>Connection Information</h3>
+                        <div id="modal-connection">Connection details will appear here.</div>
+                    </div>
+
+                    <div class="challenge-files" id="modal-files-section" style="display: none;">
+                        <h3>Challenge Files</h3>
+                        <div id="modal-files">Files will appear here.</div>
+                    </div>
+
+                    <div class="challenge-prerequisites" id="modal-prerequisites-section" style="display: none;">
+                        <h3>Prerequisites</h3>
+                        <div id="modal-prerequisites">Prerequisites will appear here.</div>
+                    </div>
+
+                    <div class="challenge-hints" id="modal-hints-section" style="display: none;">
+                        <h3>Hints</h3>
+                        <div id="modal-hints">Hints will appear here.</div>
+                    </div>
+
+                    <div class="flag-submission">
+                        <h3>Submit Flag</h3>
+                        <div class="flag-input-container">
+                            <input type="text" id="flag-input" placeholder="Enter flag here..." class="flag-input">
+                            <button type="button" id="submit-flag-btn" class="btn-flag">Submit</button>
+                        </div>
+                        <div id="flag-result" class="flag-result"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer>
+            <p>&copy; 2025 5G Playground by CSA Attack Simulation Group (ASG). All rights reserved.</p>
+        </footer>
+    </div>
+
+    <script src="js/script.js"></script>
+</body>
+</html> 
