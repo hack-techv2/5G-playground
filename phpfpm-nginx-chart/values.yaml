@@ -1,4 +1,4 @@
-namespace: your-namespace
+namespace: playground
 phpImage:
   repository: my-php-app
   tag: 1.0.0
@@ -11,7 +11,5 @@ service:
   targetPort: 80
 ingress:
   enabled: true
-  whitelist: "192.168.137.137/32,10.1.198.1/24" # Match this key with the template
-  host: my-php-app.local  # This should match the template's expectation
-  #tlsSecret: my-php-app-tls  # Ensure this matches the key in the template
-
+  whitelist: "192.168.19.132/32,10.1.7.1/24"
+  host: my-php-app.local
