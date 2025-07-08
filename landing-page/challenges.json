@@ -4,7 +4,7 @@
         "version": "1.0.0",
         "total_challenges": 12,
         "total_points": 115,
-        "categories": ["Introduction", "Wireshark", "Web", "5G API"]
+        "categories": ["Introduction", "Wireshark", "Web", "5G API", "Kubernetes"]
     },
     "challenges": [
         {
@@ -291,6 +291,81 @@
                     "type": "static",
                     "value": "open5gs{encPermanentKey-e8ed289deba952e4283b54e88e6183ca}",
                     "case_sensitive": false
+                }
+            ],
+            "files": []
+        },
+        {
+            "id": 15,
+            "title": "Kubernetes 1",
+            "category": "Kubernetes",
+            "difficulty": "medium",
+            "points": 15,
+            "description": "You've gained access to a web container in our Kubernetes cluster, but your permissions are limited. Can you escalate your privileges to become a cluster admin?\n\nYour initial access is to a PHP web container. Use your knowledge of Kubernetes security to find a way to elevate your privileges and retrieve the flag from a secret in the kube-system namespace.\n\nFlag format: k8s-admin{...}",
+            "icon": "fas fa-cloud",
+            "prerequisites": [7],
+            "connection_info": "Access to the web container pod required",
+            "hints": [
+                {
+                    "content": "Administrators sometimes leave their credentials in unexpected places. Have you checked all the interesting directories?",
+                    "unlock_requirements": []
+                }
+            ],
+            "flags": [
+                {
+                    "type": "static",
+                    "value": "k8s-admin{admin_conf_leads_to_cluster_takeover}",
+                    "case_sensitive": true
+                }
+            ],
+            "files": []
+        },
+        {
+            "id": 16,
+            "title": "Kubernetes 2",
+            "category": "Kubernetes",
+            "difficulty": "medium",
+            "points": 20,
+            "description": "Now that you have cluster access, it's time to go further into the 5G core network!\nFlag format: upf-access{...}",
+            "icon": "fas fa-network-wired",
+            "prerequisites": [15],
+            "connection_info": "Cluster admin access required",
+            "hints": [
+                {
+                    "content": "What are special privileges in kubernetes? What commands can you use to examine pod configurations and access running containers?",
+                    "unlock_requirements": []
+                }
+            ],
+            "flags": [
+                {
+                    "type": "static",
+                    "value": "upf-access{lateral_movement_to_5g_core_complete}",
+                    "case_sensitive": true
+                }
+            ],
+            "files": []
+        },
+        {
+            "id": 17,
+            "title": "Kubernetes 3",
+            "category": "Kubernetes",
+            "difficulty": "medium",
+            "points": 25,
+            "description": "You're inside the container with elevated capabilities, but there is a bigger world out there than just Kubernetes.\n\nFlag format: host-breakout{...}",
+            "icon": "fas fa-door-open",
+            "prerequisites": [16],
+            "connection_info": "Access to UPF pod required",
+            "hints": [
+                {
+                    "content": "Privileged containers have permissions to do something that other containers cannot",
+                    "unlock_requirements": []
+                }
+            ],
+            "flags": [
+                {
+                    "type": "static",
+                    "value": "host-breakout{privileged_container_leads_to_host_compromise}",
+                    "case_sensitive": true
                 }
             ],
             "files": []
